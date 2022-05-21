@@ -16,7 +16,7 @@ namespace Casino_Royal_PIA_Back_end.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Rifa>>> Get()
+        public async Task<ActionResult<List<Rifa>>> GetAll()
         {
             return await dbContext.Rifas.ToListAsync();
         }
@@ -43,7 +43,7 @@ namespace Casino_Royal_PIA_Back_end.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> DeleteById(int id)
         {
             var existe = await dbContext.Rifas.AnyAsync(x => x.Id == id);
             if(!existe)
