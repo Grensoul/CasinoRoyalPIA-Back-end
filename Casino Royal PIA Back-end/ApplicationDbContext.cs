@@ -11,6 +11,7 @@ namespace Casino_Royal_PIA_Back_end
 
         }
 
+
         public DbSet<Rifa> Rifas { get; set; }
         public DbSet<Participante> Participantes { get; set; }
         public DbSet<Premio> Premios { get; set; }

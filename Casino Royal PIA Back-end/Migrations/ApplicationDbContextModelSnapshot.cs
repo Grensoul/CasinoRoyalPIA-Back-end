@@ -82,7 +82,12 @@ namespace Casino_Royal_PIA_Back_end.Migrations
                         .HasMaxLength(75)
                         .HasColumnType("nvarchar(75)");
 
+                    b.Property<string>("UsuarioId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Rifas");
                 });
@@ -99,9 +104,6 @@ namespace Casino_Royal_PIA_Back_end.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("ParticipanteId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PremioId")
                         .HasColumnType("int");
 
                     b.Property<int>("RifaId")
@@ -346,16 +348,25 @@ namespace Casino_Royal_PIA_Back_end.Migrations
                     b.Navigation("Rifa");
                 });
 
+            modelBuilder.Entity("Casino_Royal_PIA_Back_end.Entidades.Rifa", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId");
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("Casino_Royal_PIA_Back_end.Entidades.RifaParticipante", b =>
                 {
                     b.HasOne("Casino_Royal_PIA_Back_end.Entidades.Participante", "Participante")
-                        .WithMany()
+                        .WithMany("RifasParticipantes")
                         .HasForeignKey("ParticipanteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Casino_Royal_PIA_Back_end.Entidades.Rifa", "Rifa")
-                        .WithMany("RifaParticipante")
+                        .WithMany("RifasParticipantes")
                         .HasForeignKey("RifaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -423,11 +434,16 @@ namespace Casino_Royal_PIA_Back_end.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Casino_Royal_PIA_Back_end.Entidades.Participante", b =>
+                {
+                    b.Navigation("RifasParticipantes");
+                });
+
             modelBuilder.Entity("Casino_Royal_PIA_Back_end.Entidades.Rifa", b =>
                 {
                     b.Navigation("Premios");
 
-                    b.Navigation("RifaParticipante");
+                    b.Navigation("RifasParticipantes");
 
                     b.Navigation("Tarjetas");
                 });

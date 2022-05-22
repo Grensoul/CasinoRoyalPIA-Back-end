@@ -30,8 +30,10 @@ namespace Casino_Royal_PIA_Back_end.Controllers
         }
 
         [HttpGet("Ganador")]
-        public async Task<ActionResult<List<Premio>>> GetWinner()
+        public async Task<ActionResult<List<Premio>>> GetWinner(int id)
         {
+            //Random random = new Random();
+            //var winner = random.Next();
             return Ok();
         }
 

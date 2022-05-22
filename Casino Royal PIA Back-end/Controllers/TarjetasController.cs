@@ -15,10 +15,13 @@ namespace Casino_Royal_PIA_Back_end.Controllers
             this.dbContext = context;
         }
 
-        [HttpGet]
+        [HttpGet("ObtenerIdYNombreDeTarjetas")]
         public async Task<ActionResult<List<Tarjeta>>> GetAll()
         {
             return await dbContext.Tarjetas.ToListAsync();
         }
+
+        //[HttpGet("ObtenerTarjetasDisponiblesEnRifaPorId")]
+        //public async Task<ActionResult>
     }
 }

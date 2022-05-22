@@ -5,21 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Casino_Royal_PIA_Back_end.Migrations
 {
-    public partial class AvanceEntidades : Migration
+    public partial class Inicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
-                name: "NombreRifa",
-                table: "Rifas",
-                type: "nvarchar(75)",
-                maxLength: 75,
-                nullable: false,
-                defaultValue: "",
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -65,51 +54,12 @@ namespace Casino_Royal_PIA_Back_end.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NombreParticipante = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
+                    NombreParticipante = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: true),
                     EdadParticipante = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Participantes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Premios",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NombrePremio = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
-                    IdRifa = table.Column<int>(type: "int", nullable: false),
-                    RifaId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Premios", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Premios_Rifas_RifaId",
-                        column: x => x.RifaId,
-                        principalTable: "Rifas",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tarjetas",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NombreTarjeta = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    RifaId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tarjetas", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Tarjetas_Rifas_RifaId",
-                        column: x => x.RifaId,
-                        principalTable: "Rifas",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -219,6 +169,45 @@ namespace Casino_Royal_PIA_Back_end.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Rifas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NombreRifa = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
+                    UsuarioId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Rifas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Rifas_AspNetUsers_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Premios",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NombrePremio = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
+                    IdRifa = table.Column<int>(type: "int", nullable: false),
+                    RifaId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Premios", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Premios_Rifas_RifaId",
+                        column: x => x.RifaId,
+                        principalTable: "Rifas",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RifaParticipantes",
                 columns: table => new
                 {
@@ -226,8 +215,7 @@ namespace Casino_Royal_PIA_Back_end.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RifaId = table.Column<int>(type: "int", nullable: false),
                     ParticipanteId = table.Column<int>(type: "int", nullable: false),
-                    NumLoteria = table.Column<int>(type: "int", nullable: false),
-                    PremioId = table.Column<int>(type: "int", nullable: false)
+                    NumLoteria = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -244,6 +232,25 @@ namespace Casino_Royal_PIA_Back_end.Migrations
                         principalTable: "Rifas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tarjetas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NombreTarjeta = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    RifaId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tarjetas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tarjetas_Rifas_RifaId",
+                        column: x => x.RifaId,
+                        principalTable: "Rifas",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -301,6 +308,11 @@ namespace Casino_Royal_PIA_Back_end.Migrations
                 column: "RifaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Rifas_UsuarioId",
+                table: "Rifas",
+                column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tarjetas_RifaId",
                 table: "Tarjetas",
                 column: "RifaId");
@@ -336,19 +348,13 @@ namespace Casino_Royal_PIA_Back_end.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Participantes");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "NombreRifa",
-                table: "Rifas",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(75)",
-                oldMaxLength: 75);
+            migrationBuilder.DropTable(
+                name: "Rifas");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

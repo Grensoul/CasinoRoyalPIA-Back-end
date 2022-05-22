@@ -1,12 +1,10 @@
 ﻿using Casino_Royal_PIA_Back_end.Validaciones;
-using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
-namespace Casino_Royal_PIA_Back_end.Entidades
+namespace Casino_Royal_PIA_Back_end.DTOs
 {
-    public class Participante
+    public class RegistrarParticipanteDTO
     {
-        public int Id { get; set; }
         [Required(ErrorMessage = "El siguiente campo es obligatorio: {0}")]
         [StringLength(maximumLength: 75, ErrorMessage = "El campo {0} solo puede tener hasta 75 caracteres")]
         [PrimerLetraMayus]
@@ -14,8 +12,7 @@ namespace Casino_Royal_PIA_Back_end.Entidades
         [Required(ErrorMessage = "El siguiente campo es obligatorio: {0}")]
         [Range(18, 99)]
         public int EdadParticipante { get; set; }
-        public List<RifaParticipante> RifasParticipantes { get; set; }
-        
 
+        public List<int> RifasIds { get; set; }
     }
 }
