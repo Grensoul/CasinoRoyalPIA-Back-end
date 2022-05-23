@@ -1,4 +1,6 @@
 ﻿using Casino_Royal_PIA_Back_end.DTOs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -10,6 +12,7 @@ namespace Casino_Royal_PIA_Back_end.Controllers
 {
     [ApiController]
     [Route("api/cuentas")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CuentasController : ControllerBase
     {
         private readonly UserManager<IdentityUser> userManager;
@@ -25,6 +28,7 @@ namespace Casino_Royal_PIA_Back_end.Controllers
         }
 
         [HttpPost("registro")]
+        [AllowAnonymous]
         public async Task<ActionResult<RespuestaAuthDTO>> Register(CredencialesUserDTO credencialesUserDTO)
         {
             var user = new IdentityUser { UserName = credencialesUserDTO.Email,
@@ -33,7 +37,7 @@ namespace Casino_Royal_PIA_Back_end.Controllers
 
             if (result.Succeeded)
             {
-                return CreateToken(credencialesUserDTO);
+                return await CreateToken(credencialesUserDTO);
             }
             else
             {
@@ -41,7 +45,8 @@ namespace Casino_Royal_PIA_Back_end.Controllers
             }
         }
 
-        [HttpPost("login")]
+        [HttpPost("login")] //checando login pq no funciona
+        [AllowAnonymous]
         public async Task<ActionResult<RespuestaAuthDTO>> Login(CredencialesUserDTO credencialesUserDTO)
         {
             var result = await signInManager.PasswordSignInAsync(credencialesUserDTO.Email,
@@ -49,7 +54,7 @@ namespace Casino_Royal_PIA_Back_end.Controllers
 
             if (result.Succeeded)
             {
-                return CreateToken(credencialesUserDTO);
+                return await CreateToken(credencialesUserDTO);
             }
             else
             {
@@ -57,12 +62,18 @@ namespace Casino_Royal_PIA_Back_end.Controllers
             }
         }
 
-        private RespuestaAuthDTO CreateToken(CredencialesUserDTO credencialesUserDTO)
+        private async Task<RespuestaAuthDTO> CreateToken(CredencialesUserDTO credencialesUserDTO)
         {
             var claims = new List<Claim>()
             {
                 new Claim("email", credencialesUserDTO.Email),
             };
+
+            var user = await userManager.FindByEmailAsync(credencialesUserDTO.Email);
+
+            var claimsDb = await userManager.GetClaimsAsync(user);
+
+            claims.AddRange(claimsDb);
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["jwtkey"]));
 
@@ -78,6 +89,24 @@ namespace Casino_Royal_PIA_Back_end.Controllers
                 Token = new JwtSecurityTokenHandler().WriteToken(securityToken),
                 Expiracion = expiracion
             };
+        }
+
+        [HttpPost("DarAdmin")]
+        [Authorize(Policy = "Admin")]
+        public async Task<ActionResult> GiveAdmin(EditarAdminDTO editarAdminDTO)
+        {
+            var user = await userManager.FindByEmailAsync(editarAdminDTO.Email);
+            await userManager.AddClaimAsync(user, new Claim("admin", "1"));
+            return NoContent();
+        }
+
+        [HttpPost("RevocarAdmin")]
+        [Authorize(Policy = "Admin")]
+        public async Task<ActionResult> RemoveAdmin(EditarAdminDTO editarAdminDTO)
+        {
+            var user = await userManager.FindByEmailAsync(editarAdminDTO.Email);
+            await userManager.RemoveClaimAsync(user, new Claim("admin", "1"));
+            return NoContent();
         }
     }
 }

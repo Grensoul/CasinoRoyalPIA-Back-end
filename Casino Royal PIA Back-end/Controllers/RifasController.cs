@@ -26,7 +26,9 @@ namespace Casino_Royal_PIA_Back_end.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<List<ObtenerRifaDTO>>> GetAll()
         {
-            var rifas = await dbContext.Rifas.ToListAsync();
+            var rifas = await dbContext.Rifas
+                .Include(rifasDb => rifasDb.Premios)
+                .ToListAsync();
             if (rifas.Count == 0)
             {
                 return NotFound("No hay ninguna rifa en el sistema");
@@ -62,6 +64,7 @@ namespace Casino_Royal_PIA_Back_end.Controllers
         }
 
         [HttpPost("NuevaRifa")]
+        [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Post(CreacionRifaDTO creacionRifaDTO)
         {
             var existeRifaConMismoNombre = await dbContext.Rifas.AnyAsync(x => x.NombreRifa == creacionRifaDTO.NombreRifa);
@@ -79,6 +82,7 @@ namespace Casino_Royal_PIA_Back_end.Controllers
         }
 
         [HttpPut("ModificarRifaPorID")]
+        [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Put(ModificacionRifaDTO modificacionRifaDTO, int id)
         {
             if (modificacionRifaDTO.Id != id)
@@ -95,6 +99,7 @@ namespace Casino_Royal_PIA_Back_end.Controllers
 
 
         [HttpDelete("EliminarRifaPorID")]
+        [Authorize(Policy = "Admin")]
         public async Task<ActionResult> DeleteById(int id)
         {
             var existe = await dbContext.Rifas.AnyAsync(x => x.Id == id);

@@ -26,7 +26,7 @@ namespace Casino_Royal_PIA_Back_end
             {
                 opciones.Filters.Add(typeof(FiltroDeExcepcion));
             }).AddJsonOptions(x =>
-                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles).AddNewtonsoftJson();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
@@ -80,6 +80,11 @@ namespace Casino_Royal_PIA_Back_end
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddAuthorization(opciones =>
+            {
+                opciones.AddPolicy("Admin", politica => politica.RequireClaim("admin"));
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

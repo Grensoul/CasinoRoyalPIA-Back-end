@@ -26,10 +26,17 @@ namespace Casino_Royal_PIA_Back_end.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Participante>>> GetAll()
+        public async Task<ActionResult<List<ObtenerParticipantesDTO>>> GetAll()
         {
-            logger.LogInformation("Obteniendo lista de todos los participantes");
-            return await dbContext.Participantes.ToListAsync();
+            var participantes = await dbContext.Participantes
+                //.Include(participantesDb => participantesDb.Premios)
+                .ToListAsync();
+            if (participantes.Count == 0)
+            {
+                return NotFound("No hay ningún participante en el sistema");
+            }
+
+            return mapper.Map<List<ObtenerParticipantesDTO>>(participantes);
         }
 
         [HttpPost("RegistrarParticipante")]
@@ -44,19 +51,19 @@ namespace Casino_Royal_PIA_Back_end.Controllers
                     $"{registrarParticipanteDTO.NombreParticipante}");
             }
 
-            if (registrarParticipanteDTO == null)
-            {
-                return BadRequest("No se puede registrar un participante sin rifas seleccionadas");
-            }
+            //if (registrarParticipanteDTO == null)
+            //{
+            //    return BadRequest("No se puede registrar un participante sin rifas seleccionadas");
+            //}
 
-            var rifasIds = await dbContext.Rifas.Where(rifaBD =>
-            registrarParticipanteDTO.RifasIds.Contains(rifaBD.Id))
-                .Select(x => x.Id).ToListAsync();
+            //var rifasIds = await dbContext.Rifas.Where(rifaBD =>
+            //registrarParticipanteDTO.RifasIds.Contains(rifaBD.Id))
+            //    .Select(x => x.Id).ToListAsync();
 
-            if (registrarParticipanteDTO.RifasIds.Count != rifasIds.Count)
-            {
-                return BadRequest("No existe alguna de las rifas enviadas");
-            }
+            //if (registrarParticipanteDTO.RifasIds.Count != rifasIds.Count)
+            //{
+            //    return BadRequest("No existe alguna de las rifas enviadas");
+            //}
 
             var participante = mapper.Map<Participante>(registrarParticipanteDTO);
 
