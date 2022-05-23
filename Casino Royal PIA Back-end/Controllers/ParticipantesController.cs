@@ -10,7 +10,7 @@ namespace Casino_Royal_PIA_Back_end.Controllers
 {
     [ApiController]
     [Route("api/participantes")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ParticipantesController : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
@@ -24,6 +24,7 @@ namespace Casino_Royal_PIA_Back_end.Controllers
             this.logger = logger;
             this.mapper = mapper;
         }
+
 
         [HttpGet]
         public async Task<ActionResult<List<ObtenerParticipantesDTO>>> GetAll()
@@ -102,7 +103,7 @@ namespace Casino_Royal_PIA_Back_end.Controllers
             return Ok();
         }
 
-
+        [Authorize(Policy = "Admin")]
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteById(int id)
         {

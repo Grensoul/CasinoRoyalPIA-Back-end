@@ -23,8 +23,9 @@ namespace Casino_Royal_PIA_Back_end.Controllers
             this.mapper = mapper;
         }
 
+
         [HttpGet("ObtenerPremios")]
-        [AllowAnonymous]
+        [Authorize(Policy = "Admin")]
         public async Task<ActionResult<List<ObtenerPremiosDTO>>> GetAll()
         {
             var premios = await dbContext.Premios.ToListAsync();
@@ -38,6 +39,7 @@ namespace Casino_Royal_PIA_Back_end.Controllers
         }
 
         [HttpPost("AgregarPremio")]
+        [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Post(AgregarPremioDTO agregarPremioDTO)
         {
             var idRifa = agregarPremioDTO.IdRifa;
@@ -59,6 +61,7 @@ namespace Casino_Royal_PIA_Back_end.Controllers
         }
 
         [HttpPatch("{id:int}")]
+        [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Patch(int id, JsonPatchDocument<PremioPatchDTO> patchDocument)
         {
             if (patchDocument == null) { return BadRequest(); }
@@ -83,8 +86,8 @@ namespace Casino_Royal_PIA_Back_end.Controllers
 
         }
 
-        [AllowAnonymous]
         [HttpGet("{id:int}/Ganador")]
+        [Authorize(Policy = "Admin")]
         public async Task<ActionResult<Object>> GetWinner(int id)
         {
             var rifaDB = await dbContext.Rifas.Where(x => x.Id == id).FirstOrDefaultAsync();
