@@ -1,0 +1,65 @@
+﻿using Casino_Royal_PIA_Back_end.Entidades;
+
+namespace Casino_Royal_PIA_Back_end.Utilidades
+{
+    public class ListaDeTarjetas
+    {
+        //public List<Tarjeta> tarjetas = new()
+        //{
+        //    new Tarjeta(1,"ElGallo"),
+        //    new Tarjeta(2,"ElDiablo"),
+        //    new Tarjeta(3,"LaDama"),
+        //    new Tarjeta(4,"ElCatrín"),
+        //    new Tarjeta(5,"ElParaguas"),
+        //    new Tarjeta(6,"LaSirena"),
+        //    new Tarjeta(7,"LaEscalera"),
+        //    new Tarjeta(8,"LaBotella"),
+        //    new Tarjeta(9,"ElBarril"),
+        //    new Tarjeta(10,"ElÁrbol"),
+        //    new Tarjeta(11,"ElMelón"),
+        //    new Tarjeta(12,"ElValite"),
+        //    new Tarjeta(13,"ElGorrito"),
+        //    new Tarjeta(14,"LaMuerte"),
+        //    new Tarjeta(15,"LaPera"),
+        //    new Tarjeta(16,"LaBandera"),
+        //    new Tarjeta(17,"ElBandolón"),
+        //    new Tarjeta(18,"ElVioloncello"),
+        //    new Tarjeta(19,"LaGarza"),
+        //    new Tarjeta(20,"ElPájaro"),
+        //    new Tarjeta(21,"LaMano"),
+        //    new Tarjeta(22,"LaBota"),
+        //    new Tarjeta(23,"LaLuna"),
+        //    new Tarjeta(24,"ElCotorro"),
+        //    new Tarjeta(25,"ElBorracho"),
+        //    new Tarjeta(26,"ElNegrito"),
+        //    new Tarjeta(27,"ElCorazón"),
+        //    new Tarjeta(28,"LaSandía"),
+        //    new Tarjeta(29,"ElTambor"),
+        //    new Tarjeta(30,"ElCamarón"),
+        //    new Tarjeta(31,"LasJaras"),
+        //    new Tarjeta(32,"ElMúsico"),
+        //    new Tarjeta(33,"LaAraña"),
+        //    new Tarjeta(34,"ElSoldado"),
+        //    new Tarjeta(35,"LaEstrella"),
+        //    new Tarjeta(36,"ElCazo"),
+        //    new Tarjeta(37,"ElMundo"),
+        //    new Tarjeta(38,"ElApache"),
+        //    new Tarjeta(39,"ElNopal"),
+        //    new Tarjeta(40,"ElAlacrán"),
+        //    new Tarjeta(41,"LaRosa"),
+        //    new Tarjeta(42,"LaCalavera"),
+        //    new Tarjeta(43,"LaCampana"),
+        //    new Tarjeta(44,"ElCantarito"),
+        //    new Tarjeta(45,"ElVenado"),
+        //    new Tarjeta(46,"ElSol"),
+        //    new Tarjeta(47,"LaCorona"),
+        //    new Tarjeta(48,"LaChalupa"),
+        //    new Tarjeta(49,"ElPino"),
+        //    new Tarjeta(50,"ElPescado"),
+        //    new Tarjeta(51,"LaPalma"),
+        //    new Tarjeta(52,"LaMaceta"),
+        //    new Tarjeta(53,"ElArpa"),
+        //    new Tarjeta(54,"LaRana")
+        //};
+    }
+}

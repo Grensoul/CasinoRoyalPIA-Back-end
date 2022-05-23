@@ -14,7 +14,7 @@ namespace Casino_Royal_PIA_Back_end.Utilidades
 
             CreateMap<ModificacionRifaDTO, Rifa>();
 
-            //CreateMap<AgregarParticipanteARifaDTO, Participante>();
+            CreateMap<AgregarParticipanteARifaDTO, RifaParticipante>();
 
             CreateMap<RegistrarParticipanteDTO, Participante>();
                 //.ForMember(participante => participante.RifasParticipantes,
@@ -27,6 +27,8 @@ namespace Casino_Royal_PIA_Back_end.Utilidades
             CreateMap<PremioPatchDTO, Premio>().ReverseMap();
 
             CreateMap<Participante, ObtenerParticipantesDTO>();
+
+            //CreateMap<RifaParticipanteDTO, RifaParticipante>().ReverseMap();
         }
 
         //private List<RifaParticipante> MapRifasParticipantes(RegistrarParticipanteDTO registrarParticipanteDTO,

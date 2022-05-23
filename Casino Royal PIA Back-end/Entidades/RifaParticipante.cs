@@ -9,10 +9,10 @@ namespace Casino_Royal_PIA_Back_end.Entidades
         public int RifaId { get; set; }
         [Required(ErrorMessage = "El siguiente campo es obligatorio: {0}")]
         public int ParticipanteId { get; set; }
-        public Rifa Rifa { get; set; }
         public Participante Participante { get; set; }
         [Required(ErrorMessage = "El siguiente campo es obligatorio: {0}")]
         public int NumLoteria { get; set; }
+        public Rifa Rifa { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

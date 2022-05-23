@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿    using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace Casino_Royal_PIA_Back_end.Entidades

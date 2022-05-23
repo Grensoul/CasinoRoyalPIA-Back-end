@@ -39,29 +39,62 @@ namespace Casino_Royal_PIA_Back_end.Controllers
 
         [HttpGet("ObtenerTarjetasDisponiblesPorIdDeRifa")]
         [AllowAnonymous]
-        public async Task<ActionResult<ObtenerRifaDTO>> GetById(int id)
+        public async Task<ActionResult<List<int>>> GetById(int id)
         {
-            var rifa = await dbContext.Rifas.FirstOrDefaultAsync(x => x.Id == id);
-            if (rifa == null)
+
+            var registros = await dbContext.RifaParticipantes.Where(
+                registro => registro.RifaId == id).ToListAsync();
+            if (registros.Count == 0) { return NotFound("La rifa no tiene ningún participante registrado"); }
+
+            List<int> NumNoDisp = new List<int>();
+            foreach (var registro in registros)
             {
-                return BadRequest("La rifa no existe.");
+                NumNoDisp.Add(registro.NumLoteria);
             }
 
-            return mapper.Map<ObtenerRifaDTO>(rifa);
-        }
-
-        [HttpGet("ObtenerTarjetasDisponiblesPorNombreDeRifa")]
-        [AllowAnonymous]
-        public async Task<ActionResult<ObtenerRifaDTO>> GetByName(int id)
-        {
-            var rifa = await dbContext.Rifas.FirstOrDefaultAsync(x => x.Id == id);
-            if (rifa == null)
+            var numTarjetasBd = await dbContext.Tarjetas.ToListAsync();
+            List<int> Disponibles = new List<int>();
+            foreach (var numLoteria in numTarjetasBd)
             {
-                return BadRequest("La rifa no existe.");
+                if(!NumNoDisp.Contains(numLoteria.Id)) { Disponibles.Add(numLoteria.Id); }
             }
 
-            return mapper.Map<ObtenerRifaDTO>(rifa);
+            return Disponibles;
+
+
+
+            //var rifa = await dbContext.Rifas.FirstOrDefaultAsync(x => x.Id == id);
+            //if (rifa == null)
+            //{
+            //    return BadRequest("La rifa no existe.");
+            //}
+
+            //return mapper.Map<ObtenerRifaDTO>(rifa);
         }
+
+        //[HttpGet("ObtenerTarjetasDisponiblesPorNombreDeRifa")]
+        //[AllowAnonymous]
+        //public async Task<ActionResult<List<int>>> GetByName(string nombre)
+        //{
+
+        //    var registros = await dbContext.RifaParticipantes.Where(
+        //        registro => registro. == nombre).ToListAsync();
+        //    if (registros.Count == 0) { return NotFound("La rifa no tiene ningún participante registrado"); }
+
+        //    List<int> NumNoDisp = new List<int>();
+        //    foreach (var registro in registros)
+        //    {
+        //        NumNoDisp.Add(registro.NumLoteria);
+        //    }
+
+        //    var numTarjetasBd = await dbContext.Tarjetas.ToListAsync();
+        //    List<int> Disponibles = new List<int>();
+        //    foreach (var numLoteria in numTarjetasBd)
+        //    {
+        //        if (!NumNoDisp.Contains(numLoteria.Id)) { Disponibles.Add(numLoteria.Id); }
+        //    }
+
+        //    return Disponibles;
 
         [HttpPost("NuevaRifa")]
         [Authorize(Policy = "Admin")]

@@ -74,36 +74,35 @@ namespace Casino_Royal_PIA_Back_end.Controllers
         }
 
 
-        //[HttpPost("AgregarParticipanteARifa")]
-        //public async Task<ActionResult> Post(AgregarParticipanteARifaDTO agregarParticipanteARifaDTO)
-        //{
-        //    var existeParticipanteConMismoId = await dbContext.RifaParticipantes.AnyAsync(x => 
-        //    x.Id == agregarParticipanteARifaDTO.ParticipanteId);
+        [HttpPost("AgregarParticipanteARifa")]
+        public async Task<ActionResult> Post(AgregarParticipanteARifaDTO agregarParticipanteARifaDTO)
+        {
+            if (agregarParticipanteARifaDTO == null) { return NotFound("No hay nada que agregar"); }
 
-        //    if (existeParticipanteConMismoId)
-        //    {
-        //        return BadRequest($"Ya existe un participante en la rifa con el id " +
-        //            $"{agregarParticipanteARifaDTO.ParticipanteId}");
-        //    }
+            if (agregarParticipanteARifaDTO.NumLoteria < 0 || agregarParticipanteARifaDTO.NumLoteria > 54)
+            {
+                return BadRequest("Numero de tarjeta inválido");
+            }
 
-        //    var numeroDeTarjetaOcupado = await dbContext.RifaParticipantes.AnyAsync(x =>
-        //    x.NumLoteria == agregarParticipanteARifaDTO.NumLoteria);
+            var numeroDeTarjetaOcupado = await dbContext.RifaParticipantes.AnyAsync(x =>
+            x.NumLoteria == agregarParticipanteARifaDTO.NumLoteria &&
+            x.RifaId == agregarParticipanteARifaDTO.RifaId);
 
-        //    if (numeroDeTarjetaOcupado)
-        //    {
-        //        return BadRequest($"Ya existe un participante en la rifa con el numero de tarjeta " +
-        //            $"{agregarParticipanteARifaDTO.NumLoteria}");
-        //    }
+            if (numeroDeTarjetaOcupado)
+            {
+                return BadRequest($"Ya existe un participante en la rifa con el numero de tarjeta " +
+                    $"{agregarParticipanteARifaDTO.NumLoteria}");
+            }
 
-        //    var participante = mapper.Map<Participante>(agregarParticipanteARifaDTO);
+            var participante = mapper.Map<RifaParticipante>(agregarParticipanteARifaDTO);
 
-        //    dbContext.Add(participante);
-        //    await dbContext.SaveChangesAsync();
-        //    logger.LogInformation("Se esta agregando un nuevo participante");
-        //    return Ok();
-        //}
+            dbContext.Add(participante);
+            await dbContext.SaveChangesAsync();
+            logger.LogInformation("Se esta agregando un nuevo participante");
+            return Ok();
+        }
 
-        
+
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteById(int id)
         {

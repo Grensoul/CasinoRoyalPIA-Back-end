@@ -83,12 +83,41 @@ namespace Casino_Royal_PIA_Back_end.Controllers
 
         }
 
-        [HttpGet("Ganador")]
-        public async Task<ActionResult<List<Premio>>> GetWinner(int id)
+        [AllowAnonymous]
+        [HttpGet("{id:int}/Ganador")]
+        public async Task<ActionResult<Object>> GetWinner(int id)
         {
-            //Random random = new Random();
-            //var winner = random.Next();
-            return Ok();
+            var rifaDB = await dbContext.Rifas.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (rifaDB == null) 
+                return BadRequest();
+            var participantesDeLaRifa = await dbContext.RifaParticipantes.Where(x => x.RifaId == id).ToListAsync();
+            if (participantesDeLaRifa.Count == 0)
+                return BadRequest();
+            var premiosDB = await dbContext.Premios.Where(x => x.IdRifa == id).ToListAsync();
+            if (premiosDB.Count == 0)
+                return BadRequest();
+
+            Random random = new Random();
+            var ganadorRandom = participantesDeLaRifa.OrderBy(x => random.Next()).Take(1).FirstOrDefault();
+
+            var premioGanador = premiosDB.Last();
+
+            dbContext.Premios.Remove(premioGanador);
+
+            await dbContext.SaveChangesAsync();
+
+            var participante = await dbContext.Participantes.Where(x => x.Id == ganadorRandom.ParticipanteId).FirstOrDefaultAsync();
+            var tarjetaLoteriaGanadora = await dbContext.Tarjetas.Where(x => x.Id == ganadorRandom.NumLoteria).FirstOrDefaultAsync();
+
+            var Result = new
+            {
+                NombreParticipante = participante.NombreParticipante,
+                NumLoteria = tarjetaLoteriaGanadora.Id,
+                NombreTarjeta = tarjetaLoteriaGanadora.NombreTarjeta,
+                premioGanado = premioGanador.NombrePremio
+            };
+        
+            return Result;
         }
 
         [HttpDelete("{id:int}")]
